@@ -1,0 +1,17 @@
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: rgba(80, 60, 150, 0.25);
+  --accent-light: #f5f3fb;
+  --accent-purple: #7c5cff;
+  --accent-purple-light: #e9e3f7;
+}
+
+.glass-card {
+  backdrop-filter: blur(12px);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 30px var(--glass-shadow);
+  border-radius: 1.25rem;
+  padding: 1rem;
+}
