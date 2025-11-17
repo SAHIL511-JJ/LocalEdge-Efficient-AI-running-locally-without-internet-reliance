@@ -1,53 +1,36 @@
 // app/api/chat/regenerate/route.ts
+
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { sendMessagesStream } from "@/lib/deepseek";
+import { chatWithOllama } from "@/lib/ollama";
 
 export async function POST(req: Request) {
-  const { conversationId } = await req.json();
+  try {
+    const { conversationId } = await req.json();
 
-  const history = await prisma.message.findMany({
-    where: { conversationId },
-    orderBy: { createdAt: "asc" },
-  });
+    const history = await prisma.message.findMany({
+      where: { conversationId },
+      orderBy: { createdAt: "asc" },
+    });
 
-  const messages = history.map((m) => ({
-    role: m.role as "assistant" | "user" | "system",
-    content: m.content,
-  }));
+    const messages = history.map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
 
-  const response = await sendMessagesStream(messages);
+    const assistantText = await chatWithOllama(messages);
 
-  let assistant = "";
-  const encoder = new TextEncoder();
+    await prisma.message.create({
+      data: {
+        role: "assistant",
+        content: assistantText,
+        conversationId,
+      },
+    });
 
-  const stream = new ReadableStream({
-    async start(controller) {
-      const reader = response.body!.getReader();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = new TextDecoder().decode(value);
-        assistant += chunk;
-
-        controller.enqueue(encoder.encode(chunk));
-      }
-
-      await prisma.message.create({
-        data: {
-          role: "assistant",
-          content: assistant,
-          conversationId,
-        },
-      });
-
-      controller.close();
-    },
-  });
-
-  return new Response(stream, {
-    headers: { "Content-Type": "text/plain; charset=utf-8" },
-  });
+    return NextResponse.json({ response: assistantText });
+  } catch (error) {
+    console.error("REGENERATE ROUTE ERROR:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
 }

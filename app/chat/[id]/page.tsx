@@ -1,8 +1,16 @@
+// app/chat/[id]/page.tsx
+
 import ChatWindow from "../components/ChatWindow";
 import ChatInput from "../components/ChatInput";
 
-export default async function ChatPage({ params }: any) {
-  const { id } = await params;
+interface ChatPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function ChatPage({ params }: ChatPageProps) {
+  const { id } = params;
 
   return (
     <div className="flex flex-col h-full">
