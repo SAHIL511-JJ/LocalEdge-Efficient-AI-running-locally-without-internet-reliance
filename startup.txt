@@ -1,0 +1,8 @@
+PS C:\ai-chat-app>
+                   npm run dev
+
+PS C:\Users\sahil> & "C:\Users\sahil\AppData\Local\Programs\Ollama\ollama.exe" serve
+
+PS C:\Users\sahil> & "C:\Users\sahil\AppData\Local\Programs\Ollama\ollama.exe" run qwen2.5-coder:7b
+
+http://localhost:3000/api/auth/signin

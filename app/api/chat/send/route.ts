@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import { chatWithOllama } from "@/lib/ollama";
+import { chatWithOpenRouter } from "@/lib/openrouter";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -51,11 +51,13 @@ export async function POST(req: Request) {
     });
 
     const messages = history.map((m) => ({
-      role: m.role,
+      role: (m.role === "assistant" ? "assistant" : "user") as
+        | "assistant"
+        | "user",
       content: m.content,
     }));
 
-    const assistantText = await chatWithOllama(messages);
+    const assistantText = await chatWithOpenRouter(messages);
 
     await prisma.message.create({
       data: {

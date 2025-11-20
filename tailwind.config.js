@@ -11,7 +11,9 @@ module.exports = {
         primary: {
           50: "#f5f3fb",
           100: "#e9e3f7",
+          200: "#d6cbff",
           500: "#7c5cff", // premium light purple
+          700: "#3f2a8c",
         },
       },
       backdropBlur: {

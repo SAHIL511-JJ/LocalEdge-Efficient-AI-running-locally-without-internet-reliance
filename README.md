@@ -51,13 +51,16 @@ A premium glass-themed AI chat application built with Next.js 16, featuring mode
    
    Create a `.env.local` file in the root directory and add the following:
    ```env
-   # Supabase configuration
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+   # Supabase configuration (already points to the shared project)
+   NEXT_PUBLIC_SUPABASE_URL=https://vaimtycswihebffxhvul.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=USE_OWNER_PROVIDED_ANON_KEY
+   SUPABASE_SERVICE_ROLE_KEY=USE_OWNER_PROVIDED_SERVICE_ROLE_KEY
 
-   # DeepSeek API (or your AI provider)
-   DEEPSEEK_API_KEY=your_deepseek_api_key
+   # OpenRouter configuration (replace the key with your own)
+   OPENROUTER_API_KEY=REPLACE_WITH_YOUR_OPENROUTER_KEY
+   OPENROUTER_MODEL=deepseek/deepseek-r1:latest
+   OPENROUTER_APP_NAME=AI Chat App
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
 
    # Database URL (if using a separate database)
    DATABASE_URL=your_database_url
@@ -117,10 +120,13 @@ npm run dev
 
 **Method 3: Using .env.local file** (Recommended - create this file in the root folder)
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-DEEPSEEK_API_KEY=your_deepseek_api_key
+NEXT_PUBLIC_SUPABASE_URL=https://vaimtycswihebffxhvul.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=USE_OWNER_PROVIDED_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY=USE_OWNER_PROVIDED_SERVICE_ROLE_KEY
+OPENROUTER_API_KEY=REPLACE_WITH_YOUR_OPENROUTER_KEY
+OPENROUTER_MODEL=deepseek/deepseek-r1:latest
+OPENROUTER_APP_NAME=AI Chat App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 DATABASE_URL=your_database_url
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret

@@ -3,14 +3,10 @@
 import ChatWindow from "../components/ChatWindow";
 import ChatInput from "../components/ChatInput";
 
-interface ChatPageProps {
-  params: {
-    id: string;
-  };
-}
+type ChatPageParams = Promise<{ id: string }>;
 
-export default function ChatPage({ params }: ChatPageProps) {
-  const { id } = params;
+export default async function ChatPage({ params }: { params: ChatPageParams }) {
+  const { id } = await params;
 
   return (
     <div className="flex flex-col h-full">

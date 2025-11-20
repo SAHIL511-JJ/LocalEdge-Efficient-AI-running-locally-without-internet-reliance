@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { chatWithOllama } from "@/lib/ollama";
+import { chatWithOpenRouter } from "@/lib/openrouter";
 
 export async function POST(req: Request) {
   try {
@@ -14,11 +14,13 @@ export async function POST(req: Request) {
     });
 
     const messages = history.map((m) => ({
-      role: m.role,
+      role: (m.role === "assistant" ? "assistant" : "user") as
+        | "assistant"
+        | "user",
       content: m.content,
     }));
 
-    const assistantText = await chatWithOllama(messages);
+    const assistantText = await chatWithOpenRouter(messages);
 
     await prisma.message.create({
       data: {
