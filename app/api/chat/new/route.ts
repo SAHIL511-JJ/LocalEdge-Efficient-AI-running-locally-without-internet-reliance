@@ -5,8 +5,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function POST() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  // Removed authentication for public deployment
+  // const session = await getServerSession(authOptions);
+  // if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   // MOCK: Generate a random conversation ID instead of using database
   const mockConversationId = `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
