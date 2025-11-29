@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 type Msg = {
   id: string;
-  role: "user" | "assistant";
+  role: "user" | " assistant";
   content: string;
 };
 
@@ -59,7 +62,7 @@ export default function ChatWindow() {
       });
     }
 
-    function onStreamEnd() {}
+    function onStreamEnd() { }
 
     window.addEventListener("chat:message", onUser);
     window.addEventListener("chat:stream", onStream);
@@ -76,7 +79,7 @@ export default function ChatWindow() {
     <div className="relative flex-1 overflow-y-auto">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(124,92,255,0.12),_transparent_55%)]" />
 
-      <div className="relative mx-auto flex h-full max-w-3xl flex-col justify-end px-4 py-8 sm:px-8">
+      <div className="relative mx-auto flex h-full max-w-3xl flex-col justify-start px-4 py-8 sm:px-8">
         <div className="space-y-5">
           {messages.map((message) => {
             const isAssistant = message.role === "assistant";
@@ -88,23 +91,56 @@ export default function ChatWindow() {
               >
                 <div className="space-y-2">
                   <p
-                    className={`text-xs uppercase tracking-[0.3em] ${
-                      isAssistant
-                        ? "text-primary-500/80"
-                        : "text-slate-400 text-right"
-                    }`}
+                    className="text-xs uppercase tracking-[0.3em]"
+                    style={{
+                      color: "var(--text-secondary)",
+                      textAlign: isAssistant ? "left" : "right",
+                    }}
                   >
                     {isAssistant ? "Aurora" : "You"}
                   </p>
 
                   <div
-                    className={`max-w-xl rounded-3xl px-5 py-4 text-sm leading-relaxed shadow-glass ${
+                    className="max-w-xl rounded-3xl px-5 py-4 text-sm leading-relaxed shadow-glass transition-colors"
+                    style={
                       isAssistant
-                        ? "border border-white/70 bg-white/70 text-slate-800"
-                        : "bg-gradient-to-r from-primary-500 to-primary-500/90 text-white"
-                    }`}
+                        ? {
+                          backgroundColor: "var(--chat-bg)",
+                          borderWidth: "1px",
+                          borderColor: "var(--chat-border)",
+                          color: "var(--text-primary)",
+                        }
+                        : {
+                          background: "var(--user-bg)",
+                          color: "white",
+                        }
+                    }
                   >
-                    {message.content}
+                    {isAssistant ? (
+                      <ReactMarkdown
+                        components={{
+                          code({ node, inline, className, children, ...props }: any) {
+                            const match = /language-(\w+)/.exec(className || "");
+                            const codeString = String(children).replace(/\n$/, "");
+
+                            return !inline && match ? (
+                              <CodeBlock language={match[1]} code={codeString} />
+                            ) : (
+                              <code
+                                className="bg-slate-800/10 px-1.5 py-0.5 rounded text-xs font-mono"
+                                {...props}
+                              >
+                                {children}
+                              </code>
+                            );
+                          },
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    ) : (
+                      message.content
+                    )}
                   </div>
                 </div>
               </div>
@@ -114,6 +150,55 @@ export default function ChatWindow() {
 
         <div ref={bottomRef} />
       </div>
+    </div>
+  );
+}
+
+function CodeBlock({ language, code }: { language: string; code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative my-4 rounded-lg overflow-hidden">
+      <div className="flex items-center justify-between bg-slate-800 px-4 py-2 text-xs">
+        <span className="text-slate-400 font-mono">{language}</span>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
+        >
+          {copied ? (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Copied!
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Copy
+            </>
+          )}
+        </button>
+      </div>
+      <SyntaxHighlighter
+        language={language}
+        style={oneDark}
+        customStyle={{
+          margin: 0,
+          borderRadius: 0,
+          fontSize: "0.875rem",
+        }}
+      >
+        {code}
+      </SyntaxHighlighter>
     </div>
   );
 }

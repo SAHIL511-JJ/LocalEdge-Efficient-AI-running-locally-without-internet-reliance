@@ -29,6 +29,7 @@ export async function chatWithOpenRouter(
     body: JSON.stringify({
       model,
       messages,
+      max_tokens: 2048, // Reduced to fit within free tier limits
     }),
   });
 

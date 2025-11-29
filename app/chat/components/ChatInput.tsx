@@ -52,20 +52,34 @@ export default function ChatInput({ conversationId }: { conversationId?: string 
   }
 
   return (
-    <div className="border-t border-white/70 bg-white/80 px-4 py-5 backdrop-blur-2xl sm:px-8">
+    <div
+      className="px-4 py-5 backdrop-blur-2xl sm:px-8 transition-colors duration-300"
+      style={{
+        borderTopWidth: "1px",
+        borderColor: "var(--chat-border)",
+        backgroundColor: "var(--chat-bg)"
+      }}
+    >
       <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex flex-1 items-end gap-3 rounded-3xl border border-white/80 bg-white/80 px-4 py-3 shadow-glass focus-within:ring-2 focus-within:ring-primary-200">
+        <div
+          className="flex flex-1 items-end gap-3 rounded-3xl px-4 py-3 shadow-glass focus-within:ring-2 transition-all duration-200"
+          style={{
+            backgroundColor: "var(--chat-bg)",
+            borderWidth: "1px",
+            borderColor: "var(--chat-border)"
+          }}
+        >
           <button
             type="button"
             className="rounded-2xl border border-white/60 px-3 py-2 text-xs font-medium text-slate-500 transition hover:border-primary-200 hover:text-primary-500"
-            onClick={() => {}}
+            onClick={() => { }}
             aria-label="Attach file (coming soon)"
           >
             Attach
           </button>
 
           <textarea
-            className="h-12 flex-1 resize-none border-none bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
+            className="h-12 flex-1 resize-none border-none bg-transparent text-sm focus:outline-none transition-colors"
             placeholder="Draft a message, use Shift + Enter for a new line"
             value={value}
             rows={1}
@@ -75,6 +89,9 @@ export default function ChatInput({ conversationId }: { conversationId?: string 
                 event.preventDefault();
                 sendMessage();
               }
+            }}
+            style={{
+              color: "var(--text-primary)"
             }}
           />
         </div>

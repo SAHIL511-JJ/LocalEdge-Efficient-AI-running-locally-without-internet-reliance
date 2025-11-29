@@ -71,15 +71,32 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="flex h-full flex-col gap-6 rounded-2xl border border-white/60 bg-white/70 px-5 py-6 shadow-glass backdrop-blur-2xl dark:border-white/10">
+    <aside
+      className="flex h-full flex-col gap-6 rounded-2xl shadow-glass backdrop-blur-2xl transition-all duration-300"
+      style={{
+        backgroundColor: "var(--chat-bg)",
+        borderWidth: "1px",
+        borderColor: "var(--chat-border)",
+        padding: "1.5rem 1.25rem"
+      }}
+    >
       <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-primary-500/80">
+        <p
+          className="text-xs font-semibold uppercase tracking-[0.4em]"
+          style={{ color: "var(--text-secondary)" }}
+        >
           Aurora
         </p>
-        <h2 className="text-lg font-semibold text-slate-900">
+        <h2
+          className="text-lg font-semibold"
+          style={{ color: "var(--text-primary)" }}
+        >
           Studio Console
         </h2>
-        <p className="text-sm text-slate-500">
+        <p
+          className="text-sm"
+          style={{ color: "var(--text-secondary)" }}
+        >
           Access every conversation and workspace in one place.
         </p>
       </div>
@@ -155,11 +172,10 @@ export default function Sidebar() {
               <Link
                 key={conversation.id}
                 href={`/chat/${conversation.id}`}
-                className={`block rounded-2xl border px-4 py-3 text-sm transition ${
-                  isActive
+                className={`block rounded-2xl border px-4 py-3 text-sm transition ${isActive
                     ? "border-primary-100 bg-primary-50 text-primary-700 shadow-glass"
                     : "border-white/50 bg-white/70 text-slate-700 hover:border-slate-200"
-                }`}
+                  }`}
               >
                 <p className="font-medium">
                   {conversation.title || "Untitled chat"}

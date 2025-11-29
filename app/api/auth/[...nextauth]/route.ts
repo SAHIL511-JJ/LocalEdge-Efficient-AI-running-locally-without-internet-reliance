@@ -1,10 +1,17 @@
 // app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+// import { PrismaClient } from "@prisma/client"; // DISABLED: Database temporarily removed
+// import bcrypt from "bcrypt";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
+
+// MOCK: Hardcoded test user (accepts any email/password for now)
+const MOCK_USER = {
+  id: "mock-user-1",
+  email: "test@example.com",
+  name: "Test User",
+};
 
 export const authOptions = {
   providers: [
@@ -13,25 +20,17 @@ export const authOptions = {
       credentials: { email: {}, password: {} },
 
       async authorize(credentials: any) {
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-
-        if (!user) return null;
-
-        const valid = await bcrypt.compare(credentials.password, user.password);
-        if (!valid) return null;
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
+        // MOCK: Accept any credentials and return mock user
+        // In production, you would validate against the database
+        if (credentials?.email && credentials?.password) {
+          return MOCK_USER;
+        }
+        return null;
       },
     }),
   ],
 
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt" as const },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
